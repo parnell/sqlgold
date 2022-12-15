@@ -1,0 +1,3 @@
+sqlalchemy==2.0.0b3
+## appdirs pypi 1.4.4 is not correct, use a 1.4.4 commit from github
+appdirs @ git+https://github.com/ActiveState/appdirs@193a2cbba58cce2542882fcedd0e49f6763672ed

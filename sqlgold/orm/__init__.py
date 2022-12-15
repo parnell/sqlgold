@@ -1,0 +1,1 @@
+from .decl_api import register_declarative_base as declarative_base
