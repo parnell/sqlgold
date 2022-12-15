@@ -1,28 +1,36 @@
 # Added SQLAlchemy Functionality
-Additional functions for session
+Additional functions for easy database connections
 
-* insert_ignore
-* insert_ignore_all
-* find_keys
-
-## Logical Key Functionality
-* linsert_ignore
-* linsert_ignore_all
-* lget
-* lexists
-
-# Installing
-## Requirements
-* Python 3.11+ 
-* SQLAlchemy 1.4+
 
 ## Pip installation
 ```sh
-python3 -m pip install git+https://github.com/parnell/sqlalchemy-extensions.git
+python3 -m pip install git+https://github.com/parnell/sqlgold.git
 ```
 
 # Using
 SQLGold to add easy database connectivity options to SQLAlchemy. 
+
+```python
+Base = declarative_base()
+DB.default_base = Base
+
+## Different ways of connecting
+# Explicit with url
+db = create_db("sqlite://")
+
+# Load in from default section of `config.toml` (see below for how to set up config)
+db = create_db()
+
+# Load in options from the 'mysql' section of `config.toml` (see below for how to set up config)
+db = create_db("mysql")
+
+# Load in options from the 'mysql.test' section of `config.toml` (see below for how to set up config)
+db = create_db("mysql.test")
+
+# Pass in database options as a dictionary
+db = create_db({"url":"sqlite://"})
+
+```
 
 
 ```python
@@ -44,28 +52,21 @@ class MyClass(Base):
 db = create_db("sqlite://", Base=Base, create_all=True)
 
 ## Use session as an instance
-obj = MyClass(id=1)
+obj = MyClass()
 session = db.Session()
 session.add(obj)
-session.commit()
-dbobjs = session.scalars(select(MyClass)).all()
-assert len(dbobjs) == 1
-
-# Cleanup
-session.delete(obj)
 session.commit()
 
 # Use Session as a contextmanager
 with db.Session() as session:
-    obj = MyClass(id=1)
+    obj = MyClass()
     session.add(obj)
     session.commit()
-    dbobjs = session.scalars(select(MyClass)).all()
-    assert len(dbobjs) == 1
 
-    # Cleanup
-    session.delete(obj)
-    session.commit()
+# Use Session as a contextmanager
+with db.Session.begin() as session:
+    obj = MyClass()
+    session.add(obj)
 ```
 
 
