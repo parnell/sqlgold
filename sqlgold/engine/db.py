@@ -42,8 +42,6 @@ class DB:
         if Base == sentinel:
             self.Base = DB.default_base
 
-        # from sqlgold.orm.session_extension import extended_sessionmaker
-
         if not self.engine:
             raise IOError("No url connection")
 
@@ -53,6 +51,10 @@ class DB:
             Session = DB.default_sessionmaker()
             Session.configure(bind=self.engine, **session_args)
             self.Session = Session
+
+    @property
+    def url(self):
+        return self.engine.url
 
     @property
     def database(self):
