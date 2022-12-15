@@ -25,8 +25,8 @@ db = create_db()
 # Load in options from the 'mysql' section of `config.toml` (see below for how to set up config)
 db = create_db("mysql")
 
-# Load in options from the 'mysql.test' section of `config.toml` (see below for how to set up config)
-db = create_db("mysql.test")
+# Load in options from the 'sqlite3.test' section of `config.toml` (see below for how to set up config)
+db = create_db("sqlite3.test")
 
 # Pass in database options as a dictionary
 db = create_db({"url":"sqlite://"})
@@ -95,6 +95,9 @@ Example `config.toml`
 default="sqlite3" 
 
 [sqlite3] 
+url="sqlite:///:memory:"
+
+[sqlite3.test] 
 url="sqlite:///:memory:"
 
 [mysql] 
