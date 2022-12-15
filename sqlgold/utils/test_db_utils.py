@@ -1,14 +1,44 @@
 """DB Utility class for testing """
-import os
 import atexit
 import inspect
 import logging
+import os
 import uuid
 from contextlib import contextmanager
-from typing import Dict
+from typing import Any, Dict, Union
 
-from sqlgold.config import cfg
+from sqlgold.config import Config
+from sqlgold.config import cfg as default_cfg
+from sqlgold.config import make_attr_dict, read_config_dir
 from sqlgold.engine.create import create_db
+
+cfg = {"not_set":True}
+
+def set_base(base: Any):
+    from sqlgold import DB
+    DB.default_base=base
+
+def set_test_config(appname_path_dict: Union[str, Dict]) -> Config:
+    """Set the config.toml to use
+
+    Args:
+        appname_path_dict (str): Set the config for SQLAlchemy Extensions.
+        Can be passed with the following.
+            Dict: updates cfg with the given dict
+            str: a path to a .toml file
+            str: appname to search for the config.toml in the the application config dir
+
+    Returns:
+        Config: A config object (an attribute dictionary)
+    """
+    cfg.clear()
+    if isinstance(appname_path_dict, dict):
+        newcfg = make_attr_dict(appname_path_dict)
+    else:
+        newcfg = read_config_dir(appname_path_dict)
+    cfg.update(newcfg)
+    return cfg
+
 
 _ensure_dropped_test_dbs = {}
 
@@ -55,12 +85,17 @@ def _create_test_db_from_params(
     if config is not None:
         base_cfg = config.copy()
     else:
-        dr = driver if driver else cfg["default"]
+        config = default_cfg.copy() if "not_set" in cfg else cfg
+        dr = driver if driver else config["default"]
         config_section = config_section if config_section else f"{dr}.test"
         sections = config_section.split(".")
-        d = cfg[sections[0]]
-        for s in sections[1:]:
-            d = d[s]
+        d = config[sections[0]]
+        try:
+            for s in sections[1:]:
+                d = d[s]
+        except KeyError as e:
+            e.add_note(f"'{config_section}' was not found in cfg")
+            raise
         base_cfg = d.copy()
     if "url" in base_cfg:
         return create_db(base_cfg["url"])
