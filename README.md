@@ -10,6 +10,7 @@ python3 -m pip install git+https://github.com/parnell/sqlgold.git
 # Using
 SQLGold to add easy database connectivity options to SQLAlchemy. 
 
+## Code Examples
 ```python
 Base = declarative_base()
 DB.default_base = Base
@@ -32,7 +33,7 @@ db = create_db({"url":"sqlite://"})
 
 ```
 
-
+Full Code Example
 ```python
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column
@@ -70,7 +71,7 @@ with db.Session.begin() as session:
 ```
 
 
-For some full code examples see [examples](https://github.com/parnell/sqlgold/blob/main/examples)
+For some other full code examples see [examples](https://github.com/parnell/sqlgold/blob/main/examples)
 
 
 # Configuration 
