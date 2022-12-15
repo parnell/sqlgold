@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='sqlgold',
-    version='0.8.0',
+    version='0.8.5',
     description='Extended functionality for SQLAlchemy',
     url='https://github.com/parnell/sqlgold',
     author='Parnell',
