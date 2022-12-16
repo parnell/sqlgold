@@ -2,7 +2,8 @@ from typing import Any, Dict, Self, Type
 
 from sqlalchemy import Engine, create_engine, quoted_name
 from sqlalchemy.engine import make_url as sa_make_url
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker as sa_sessionmaker
 from sqlalchemy.sql import text
 
 from sqlgold.engine.db import DB, sentinel
@@ -21,14 +22,14 @@ class MysqlDB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: Type[sessionmaker] = None,
+        sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
 
         connection_url = cls.create_connection_url(engine.url)
         database = engine.url.database
 
-        Session = sessionmaker()
+        Session = sa_sessionmaker()
         engine_for_creating = create_engine(connection_url)
         Session.configure(bind=engine_for_creating)
 

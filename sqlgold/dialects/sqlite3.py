@@ -2,7 +2,8 @@ import os
 from typing import Any, Dict, Self, Type
 
 from sqlalchemy import Engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker as sa_sessionmaker
 
 from sqlgold.engine.db import DB, sentinel
 
@@ -15,7 +16,7 @@ class Sqlite3DB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: Type[sessionmaker] = None,
+        sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
         db = Sqlite3DB(

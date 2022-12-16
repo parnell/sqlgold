@@ -13,7 +13,8 @@ from typing import Sequence as _typing_Sequence
 from typing import Set, Type
 
 from sqlalchemy import Engine, create_engine, quoted_name
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker as sa_sessionmaker
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import text
 
@@ -25,7 +26,7 @@ sentinel = object()
 class DB:
     """manager for interfacing with a database through SQAlchemy"""
 
-    default_sessionmaker: Type[sessionmaker] = sessionmaker
+    default_sessionmaker: Type[sa_sessionmaker] = sa_sessionmaker
     default_base: Any = None
     default_options: Set[DBOptions] = set()
 
@@ -34,7 +35,7 @@ class DB:
         engine: Engine,
         Base: Any = sentinel,
         session: Session = None,
-        sessionmaker: Type[sessionmaker] = None,
+        sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ):
         """init the DB instance with the given uri
@@ -93,6 +94,7 @@ class DB:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
         """Create a db at the specified url
@@ -105,13 +107,19 @@ class DB:
         Returns:
             Self: The database instance
         """
-        db = DB(engine=engine, Base=Base, session=session, session_args=session_args)
+        db = DB(
+            engine=engine,
+            Base=Base,
+            session=session,
+            sessionmaker=sessionmaker,
+            session_args=session_args,
+        )
 
         connection_url = cls.create_connection_url(engine.url)
         database = engine.url.database
 
         engine_for_creating = create_engine(connection_url)
-        Session = sessionmaker()
+        Session = sa_sessionmaker()
         Session.configure(bind=engine_for_creating)
 
         with Session.begin() as s:
