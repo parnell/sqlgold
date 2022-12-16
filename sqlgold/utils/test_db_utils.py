@@ -81,6 +81,7 @@ def _create_test_db_from_params(
     host: str = None,
     suffix: str = "",
     random_suffix: bool = False,
+    **kwargs,
 ):
     if config is not None:
         base_cfg = config.copy()
@@ -98,7 +99,7 @@ def _create_test_db_from_params(
             raise
         base_cfg = d.copy()
     if "url" in base_cfg:
-        return create_db(base_cfg["url"])
+        return create_db(base_cfg["url"], **kwargs)
 
     # fmt: off
     if driver: base_cfg["driver"] = driver
@@ -115,7 +116,7 @@ def _create_test_db_from_params(
     base_cfg["database"] = database
     assert len(database) <= 64
 
-    db = create_db(base_cfg)
+    db = create_db(base_cfg, **kwargs)
     return db
 
 
@@ -137,6 +138,7 @@ def create_test_db(
     drop: bool = True,
     suffix: str = "",
     random_suffix: bool = False,
+    **kwargs
 ):
     """Create a temporary db for testing. This db will by default be dropped/deleted
     When out of scope.
@@ -170,9 +172,10 @@ def create_test_db(
             host=host,
             suffix=suffix,
             random_suffix=random_suffix,
+            **kwargs
         )
     else:
-        db = create_db(url)
+        db = create_db(url, **kwargs)
 
     url_str = db.engine.url
     if drop:
