@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 
 from sqlgold.config import set_database_config
-from sqlgold.utils._test_db_utils import create_test_db
+from sqlgold.utils.test_db_utils import create_test_db
 from sqlgold import create_db
 
 Base = declarative_base()
