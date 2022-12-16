@@ -7,6 +7,7 @@ from sqlalchemy.sql import text
 
 from sqlgold.engine.db import DB, sentinel
 
+
 class MysqlDB(DB):
     @classmethod
     def create_connection_url(cls, url):
@@ -20,11 +21,9 @@ class MysqlDB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
-        db = MysqlDB(
-            engine=engine, Base=Base, session=session, session_args=session_args
-        )
 
         connection_url = cls.create_connection_url(engine.url)
         database = engine.url.database
@@ -40,6 +39,14 @@ class MysqlDB(DB):
             s.execute(text(stmt))
             s.execute(text(f"USE {quoted_name(database, True)};"))
         engine_for_creating.dispose()
+        db = MysqlDB(
+            engine=engine,
+            Base=Base,
+            session=session,
+            sessionmaker=sessionmaker,
+            session_args=session_args,
+        )
+
         if create_all and Base is not None:
             db.create_all()
         return db

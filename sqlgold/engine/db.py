@@ -34,6 +34,7 @@ class DB:
         engine: Engine,
         Base: Any = sentinel,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
     ):
         """init the DB instance with the given uri
@@ -52,7 +53,10 @@ class DB:
         logging.debug(f"SQLALCHEMY_URL = {self.engine.url}")
         if session is None:
             session_args = {} if not session_args else session_args
-            Session = DB.default_sessionmaker()
+            if sessionmaker is None:
+                Session = DB.default_sessionmaker()
+            else:
+                Session = sessionmaker
             Session.configure(bind=self.engine, **session_args)
             self.Session = Session
 

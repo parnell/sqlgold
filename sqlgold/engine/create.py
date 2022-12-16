@@ -9,17 +9,15 @@ from typing import TYPE_CHECKING, Any, Dict, Union
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL, Engine
 from sqlalchemy.engine import make_url as sa_make_url
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import text
 
 from sqlgold.config import cfg
 from sqlgold.dialects.mysql import MysqlDB
 from sqlgold.dialects.sqlite3 import Sqlite3DB
+from sqlgold.engine.db import DB, sentinel
 from sqlgold.exceptions import ConfigException
 from sqlgold.managers.db_manager import DBManager
-
-
-from sqlgold.engine.db import DB, sentinel
 
 
 class DriverType(StrEnum):
@@ -59,6 +57,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
     ) -> DB:
         from sqlgold.engine.db import DB
@@ -81,6 +80,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
             )
         elif dt == DriverType.sqlite3:
@@ -89,6 +89,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
             )
         else:
@@ -97,6 +98,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
             )
 
@@ -108,6 +110,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -118,6 +121,7 @@ class DBFactory:
             Base=Base,
             create_all=create_all,
             session=session,
+            sessionmaker=sessionmaker,
             session_args=session_args,
         )
 
@@ -127,6 +131,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -148,6 +153,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
                 *args,
                 **kwargs,
@@ -162,6 +168,7 @@ class DBFactory:
             Base=Base,
             create_all=create_all,
             session=session,
+            sessionmaker=sessionmaker,
             session_args=session_args,
             *args,
             **kwargs,
@@ -173,6 +180,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -197,6 +205,7 @@ class DBFactory:
             Base=Base,
             create_all=create_all,
             session=session,
+            sessionmaker=sessionmaker,
             session_args=session_args,
             *args,
             **kwargs,
@@ -208,6 +217,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -239,6 +249,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
                 *args,
                 **kwargs,
@@ -249,6 +260,7 @@ class DBFactory:
                 Base=Base,
                 create_all=create_all,
                 session=session,
+                sessionmaker=sessionmaker,
                 session_args=session_args,
                 *args,
                 **kwargs,
@@ -260,6 +272,7 @@ class DBFactory:
                     Base=Base,
                     create_all=create_all,
                     session=session,
+                    sessionmaker=sessionmaker,
                     session_args=session_args,
                     *args,
                     **kwargs,
@@ -270,6 +283,7 @@ class DBFactory:
                     Base=Base,
                     create_all=create_all,
                     session=session,
+                    sessionmaker=sessionmaker,
                     session_args=session_args,
                     *args,
                     **kwargs,
@@ -286,8 +300,9 @@ class DBFactory:
         section_dict_url: Union[str, Dict, URL] = None,
         Base: Any = sentinel,
         create_all: bool = False,
-        session: Session = None,
         alias: str = None,
+        session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -327,11 +342,12 @@ class DBFactory:
             Base=Base,
             create_all=create_all,
             session=session,
+            sessionmaker=sessionmaker,
             session_args=session_args,
             *args,
             **kwargs,
         )
-            
+
         dbmanager.set_database(alias, db)
         if not dbmanager.has_main_database():
             dbmanager.set_main_database(alias, db)
@@ -342,8 +358,9 @@ def create_db(
     section_dict_url: Union[str, Dict, URL] = None,
     Base: Any = sentinel,
     create_all: bool = False,
-    session: Session = None,
     alias: str = None,
+    session: Session = None,
+    sessionmaker: sessionmaker = None,
     session_args: Dict[str, Any] = None,
     *args,
     **kwargs,
@@ -374,8 +391,9 @@ def create_db(
         Base=Base,
         create_all=create_all,
         session=session,
+        sessionmaker=sessionmaker,
         alias=alias,
         session_args=session_args,
         *args,
-        **kwargs
+        **kwargs,
     )

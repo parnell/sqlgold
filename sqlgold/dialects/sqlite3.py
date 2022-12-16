@@ -2,7 +2,7 @@ import os
 from typing import Any, Dict, Self
 
 from sqlalchemy import Engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from sqlgold.engine.db import DB, sentinel
 
@@ -15,10 +15,15 @@ class Sqlite3DB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
+        sessionmaker: sessionmaker = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
         db = Sqlite3DB(
-            engine=engine, Base=Base, session=session, session_args=session_args
+            engine=engine,
+            Base=Base,
+            session=session,
+            sessionmaker=sessionmaker,
+            session_args=session_args,
         )
         if create_all and Base is not None:
             db.create_all()
