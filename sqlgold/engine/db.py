@@ -10,20 +10,24 @@ Flush: the flush occurs before any individual SQL statement is
 import logging
 from typing import Any, Dict, Optional, Self
 from typing import Sequence as _typing_Sequence
-from typing import Type
+from typing import Set, Type
 
 from sqlalchemy import Engine, create_engine, quoted_name
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import text
 
+from .db_options import DBOptions
+
 sentinel = object()
+
 
 class DB:
     """manager for interfacing with a database through SQAlchemy"""
 
     default_sessionmaker: Type[sessionmaker] = sessionmaker
     default_base: Any = None
+    default_options: Set[DBOptions] = set()
 
     def __init__(
         self,
@@ -112,7 +116,9 @@ class DB:
             )
             s.execute(text(f"USE {quoted_name(database, True)};"))
 
-        if create_all and Base is not None:
+        if Base is not None and (
+            create_all or DBOptions.create_all in DB.default_options
+        ):
             db.create_all()
         return db
 
