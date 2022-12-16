@@ -34,7 +34,7 @@ class DB:
         engine: Engine,
         Base: Any = sentinel,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ):
         """init the DB instance with the given uri
@@ -56,7 +56,7 @@ class DB:
             if sessionmaker is None:
                 Session = DB.default_sessionmaker()
             else:
-                Session = sessionmaker
+                Session = sessionmaker()
             Session.configure(bind=self.engine, **session_args)
             self.Session = Session
 

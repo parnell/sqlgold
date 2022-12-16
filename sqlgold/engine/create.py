@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import Any, Dict, Type, Union
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL, Engine
@@ -57,7 +57,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> DB:
         from sqlgold.engine.db import DB
@@ -110,7 +110,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -131,7 +131,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -180,7 +180,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -217,7 +217,7 @@ class DBFactory:
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -302,7 +302,7 @@ class DBFactory:
         create_all: bool = False,
         alias: str = None,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
         *args,
         **kwargs,
@@ -360,7 +360,7 @@ def create_db(
     create_all: bool = False,
     alias: str = None,
     session: Session = None,
-    sessionmaker: sessionmaker = None,
+    sessionmaker: Type[sessionmaker] = None,
     session_args: Dict[str, Any] = None,
     *args,
     **kwargs,

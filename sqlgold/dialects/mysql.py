@@ -1,4 +1,4 @@
-from typing import Any, Dict, Self
+from typing import Any, Dict, Self, Type
 
 from sqlalchemy import Engine, create_engine, quoted_name
 from sqlalchemy.engine import make_url as sa_make_url
@@ -21,7 +21,7 @@ class MysqlDB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
 

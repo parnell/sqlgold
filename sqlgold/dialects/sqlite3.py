@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, Self
+from typing import Any, Dict, Self, Type
 
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -15,7 +15,7 @@ class Sqlite3DB(DB):
         Base: Any = sentinel,
         create_all: bool = False,
         session: Session = None,
-        sessionmaker: sessionmaker = None,
+        sessionmaker: Type[sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
         db = Sqlite3DB(
