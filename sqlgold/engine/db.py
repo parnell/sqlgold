@@ -13,7 +13,7 @@ from typing import Sequence as _typing_Sequence
 from typing import Set, Type
 
 from sqlalchemy import Engine, create_engine, quoted_name
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session as sa_Session
 from sqlalchemy.orm import sessionmaker as sa_sessionmaker
 from sqlalchemy.schema import Table
 from sqlalchemy.sql import text
@@ -34,7 +34,7 @@ class DB:
         self,
         engine: Engine,
         Base: Any = sentinel,
-        session: Session = None,
+        session: sa_Session = None,
         sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ):
@@ -45,6 +45,7 @@ class DB:
         """
         self.engine: Engine = engine
         self.Base: Any = Base
+
         if Base == sentinel:
             self.Base = DB.default_base
 
@@ -59,7 +60,9 @@ class DB:
             else:
                 Session = sessionmaker()
             Session.configure(bind=self.engine, **session_args)
-            self.Session = Session
+            self.Session: sa_Session = Session
+        else:
+            self.Session: sa_Session = session
 
     @property
     def url(self):
@@ -93,7 +96,7 @@ class DB:
         engine: Engine,
         Base: Any = sentinel,
         create_all: bool = False,
-        session: Session = None,
+        session: sa_Session = None,
         sessionmaker: Type[sa_sessionmaker] = None,
         session_args: Dict[str, Any] = None,
     ) -> Self:
